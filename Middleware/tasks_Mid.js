@@ -4,6 +4,7 @@ async function AddTasks(req,res,next){
     let description   = addSlashes(req.body.description);
     let due_date   = addSlashes(req.body.due_date);
 
+
     const Query = `INSERT INTO tasks (description,due_date) VALUES('${description}','${due_date}')`;
     // console.log(Query);
     const promisePool = db_pool.promise();
@@ -29,7 +30,7 @@ async function ReadTasks(req,res,next){
         [rows] = await promisePool.query(Query);
         for(let idx in rows){
             rows[idx].description= htmlspecialchars(stripSlashes(rows[idx].description));
-            rows[idx].due_date= htmlspecialchars(stripSlashes(rows[idx].due_date));
+            // rows[idx].due_date= htmlspecialchars(stripSlashes(rows[idx].due_date));
         }
         req.success=true;
         req.tasks_data=rows;
