@@ -1,9 +1,10 @@
 const { addSlashes, stripSlashes } = require('slashes');
 
-async function AddMilestone(req,res,next){
-    let name   = addSlashes(req.body.name);
+async function AddTasks(req,res,next){
+    let description   = addSlashes(req.body.description);
+    let due_date   = addSlashes(req.body.due_date);
 
-    const Query = `INSERT INTO milestone (name) VALUES('${name}')`;
+    const Query = `INSERT INTO tasks (description,due_date) VALUES('${description}','${due_date}')`;
     // console.log(Query);
     const promisePool = db_pool.promise();
     let rows=[];
@@ -19,30 +20,33 @@ async function AddMilestone(req,res,next){
 
     next();
 }
-async function ReadMilestone(req,res,next){
-    const Query = `SELECT * FROM milestone `;
+async function ReadTasks(req,res,next){
+    const Query = `SELECT * FROM tasks `;
     // console.log(Query);
     const promisePool = db_pool.promise();
     let rows=[];
     try {
         [rows] = await promisePool.query(Query);
         for(let idx in rows){
-            rows[idx].name= htmlspecialchars(stripSlashes(rows[idx].name));
+            rows[idx].description= htmlspecialchars(stripSlashes(rows[idx].description));
+            rows[idx].due_date= htmlspecialchars(stripSlashes(rows[idx].due_date));
         }
         req.success=true;
-        req.milestone_data=rows;
+        req.tasks_data=rows;
     } catch (err) {
         req.success=false;
         console.log(err);
     }
     next();
 }
-async function UpdateMilestone(req,res,next){
+async function UpdateTasks(req,res,next){
     let idx    = parseInt(req.body.idx);
-    let name   = addSlashes(req.body.name);
+    let description   = addSlashes(req.body.description);
+    let due_date   = addSlashes(req.body.due_date);
 
-    let Query = `UPDATE milestone SET `;
-    Query += ` name = '${name}' `;
+    let Query = `UPDATE tasks SET `;
+    Query += ` description = '${description}', `;
+    Query += ` due_date = '${due_date}' `;
     Query += ` WHERE id = ${idx} `;
     // console.log(Query);
     const promisePool = db_pool.promise();
@@ -56,9 +60,9 @@ async function UpdateMilestone(req,res,next){
     }
     next();
 }
-async function DeleteMilestone(req,res,next){
+async function DeleteTasks(req,res,next){
     let idx    = parseInt(req.body.idx);
-    let Query = `DELETE FROM milestone  `;
+    let Query = `DELETE FROM tasks  `;
     Query += ` WHERE id = ${idx} `;
     // console.log(Query);
     const promisePool = db_pool.promise();
@@ -74,8 +78,8 @@ async function DeleteMilestone(req,res,next){
 }
 
 module.exports = {
-    AddMilestone: AddMilestone,
-    ReadMilestone:ReadMilestone,
-    UpdateMilestone:UpdateMilestone,
-    DeleteMilestone:DeleteMilestone,
+    AddTasks: AddTasks,
+    ReadTasks:ReadTasks,
+    UpdateTasks:UpdateTasks,
+    DeleteTasks:DeleteTasks,
 }
