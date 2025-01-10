@@ -17,6 +17,9 @@ app.set('views', path.join(__dirname, "/views"));
 var htmlspecialchars = require('htmlspecialchars');
 const { addSlashes, stripSlashes } = require('slashes');
 
+const mStone_R = require('./Routers/mStone_R');
+app.use('/S/',mStone_R);
+
 
 app.listen(port, () => {            //server starts listening for any attempts from a client to connect at port: {port}
     console.log(`Now listening on port http://localhost:${port}`);
