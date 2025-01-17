@@ -78,6 +78,27 @@ async function ReadTasks(req,res,next){
     }
     next();
 }
+async function ChangeWorker(req,res,next){
+    let idx    = parseInt(req.body.idx);
+    if(req.body.worker_id  !== undefined) {
+        let worker_id =  parseInt(req.body.worker_id);
+        let Query = `UPDATE tasks SET `;
+        Query += ` worker_id      = '${worker_id}' `;
+        Query += ` WHERE id = ${idx} `;
+
+        const promisePool = db_pool.promise();
+        let rows=[];
+        try {
+            [rows] = await promisePool.query(Query);
+            req.success=true;
+        } catch (err) {
+            req.success=false;
+            console.log(err);
+        }
+    }
+
+    next();
+}
 async function UpdateTasks(req,res,next){
     let idx    = parseInt(req.body.idx);
     let LastVal = 1+GetMaxOrdr();
@@ -134,4 +155,5 @@ module.exports = {
     ReadTasks:ReadTasks,
     UpdateTasks:UpdateTasks,
     DeleteTasks:DeleteTasks,
+    ChangeWorker:ChangeWorker,
 }

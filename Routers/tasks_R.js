@@ -4,6 +4,13 @@ module.exports = router;
 
 const tasks_Mid=require("../middleware/tasks_Mid");
 
+router.put("/ChangeOwner",[tasks_Mid.ChangeWorker], (req, res) => {
+    if(req.success){
+        res.status(200).json({msg:"ok"});
+    } else {
+        return res.status(500).json({message: err});
+    }
+})
 router.post('/',[tasks_Mid.AddTasks], (req, res) => {
     if(req.success){
         res.status(200).json({msg:"ok",Last_Id:req.insertId});
