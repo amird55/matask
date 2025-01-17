@@ -99,6 +99,28 @@ async function ChangeWorker(req,res,next){
 
     next();
 }
+async function ChangeMileStoneVal(req,res,next){
+    let task_id       = (req.params.task_id      === undefined)  ?  -1 : parseInt(req.params.task_id      );
+    let milestone_id  = (req.params.milestone_id === undefined)  ?  -1 : parseInt(req.params.milestone_id );
+    let status        = (req.params.status       === undefined)  ?   1 : parseInt(req.params.status       );
+    if((task_id > 0)&&(milestone_id >0)) {
+        let Query = `UPDATE tasks_milestones SET `;
+        Query += ` status      = '${status}' `;
+        Query += ` WHERE task_id = ${task_id} AND milestone_id = ${milestone_id}`;
+
+        const promisePool = db_pool.promise();
+        let rows=[];
+        try {
+            [rows] = await promisePool.query(Query);
+            req.success=true;
+        } catch (err) {
+            req.success=false;
+            console.log(err);
+        }
+    }
+
+    next();
+}
 async function UpdateTasks(req,res,next){
     let idx    = parseInt(req.body.idx);
     let LastVal = 1+GetMaxOrdr();
@@ -156,4 +178,5 @@ module.exports = {
     UpdateTasks:UpdateTasks,
     DeleteTasks:DeleteTasks,
     ChangeWorker:ChangeWorker,
+    ChangeMileStoneVal:ChangeMileStoneVal,
 }
