@@ -1,12 +1,37 @@
 const { addSlashes, stripSlashes } = require('slashes');
 
+async function GetMaxOrdr(){
+    let Query = "SELECT MAX(ordr) AS mx FROM tasks";
+    const promisePool = db_pool.promise();
+    let rows=[];
+    try {
+        [rows] = await promisePool.query(Query);
+        if(rows.length > 0){
+            return rows[0].mx;
+        }
+        return 0;
+    } catch (err) {
+        req.success=false;
+        console.log(err);
+    }
+}
 async function AddTasks(req,res,next){
-    let description   = addSlashes(req.body.description);
-    let due_date   = addSlashes(req.body.due_date);
+    let LastVal = 1+GetMaxOrdr();
+    let description     = (req.body.description     === undefined)  ?      "" : addSlashes(req.body.description );
+    let due_date        = (req.body.due_date        === undefined)  ?      "" : addSlashes(req.body.due_date    );
+    let worker_id       = (req.body.worker_id       === undefined)  ?      -1 : parseInt(req.body.worker_id     );
+    let categ_id        = (req.body.categ_id        === undefined)  ?      -1 : parseInt(req.body.categ_id      );
+    let progress_prcnt  = (req.body.progress_prcnt  === undefined)  ?       0 : parseInt(req.body.progress_prcnt);
+    let is_arsal        = (req.body.is_arsal        === undefined)  ?       0 : parseInt(req.body.is_arsal      );
+    let parent_id       = (req.body.parent_id       === undefined)  ?      -1 : parseInt(req.body.parent_id     );
+    let ordr            = (req.body.ordr            === undefined)  ? LastVal : parseInt(req.body.ordr          );
     console.log(req.body.relevant_mStone);
     let relevant_mStone = (req.body.relevant_mStone === undefined) ? [] : req.body.relevant_mStone;
 
-    let Query = `INSERT INTO tasks (description,due_date) VALUES('${description}','${due_date}')`;
+    let Query = `INSERT INTO tasks `;
+    Query += "(`description`, `due_date`, `worker_id`, `categ_id`, `progress_prcnt`, `is_arsal`, `parent_id`, `ordr`)";
+    Query += " VALUES ";
+    Query += `('${description}','${due_date}','${worker_id}','${categ_id}','${progress_prcnt}','${is_arsal}','${parent_id}','${ordr}')`;
     // console.log(Query);
     const promisePool = db_pool.promise();
     let rows=[];
@@ -55,12 +80,25 @@ async function ReadTasks(req,res,next){
 }
 async function UpdateTasks(req,res,next){
     let idx    = parseInt(req.body.idx);
-    let description   = addSlashes(req.body.description);
-    let due_date   = addSlashes(req.body.due_date);
+    let LastVal = 1+GetMaxOrdr();
+    let description     = (req.body.description     === undefined)  ?      "" : addSlashes(req.body.description );
+    let due_date        = (req.body.due_date        === undefined)  ?      "" : addSlashes(req.body.due_date    );
+    let worker_id       = (req.body.worker_id       === undefined)  ?      -1 : parseInt(req.body.worker_id     );
+    let categ_id        = (req.body.categ_id        === undefined)  ?      -1 : parseInt(req.body.categ_id      );
+    let progress_prcnt  = (req.body.progress_prcnt  === undefined)  ?       0 : parseInt(req.body.progress_prcnt);
+    let is_arsal        = (req.body.is_arsal        === undefined)  ?       0 : parseInt(req.body.is_arsal      );
+    let parent_id       = (req.body.parent_id       === undefined)  ?      -1 : parseInt(req.body.parent_id     );
+    let ordr            = (req.body.ordr            === undefined)  ? LastVal : parseInt(req.body.ordr          );
 
     let Query = `UPDATE tasks SET `;
-    Query += ` description = '${description}', `;
-    Query += ` due_date = '${due_date}' `;
+    Query += ` worker_id      = '${worker_id     }', `;
+    Query += ` categ_id       = '${categ_id      }', `;
+    Query += ` progress_prcnt = '${progress_prcnt}', `;
+    Query += ` is_arsal       = '${is_arsal      }', `;
+    Query += ` parent_id      = '${parent_id     }', `;
+    Query += ` ordr           = '${ordr          }', `;
+    Query += ` description    = '${description   }', `;
+    Query += ` due_date       = '${due_date      }' `;
     Query += ` WHERE id = ${idx} `;
     // console.log(Query);
     const promisePool = db_pool.promise();
