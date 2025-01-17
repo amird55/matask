@@ -3,9 +3,10 @@ const { addSlashes, stripSlashes } = require('slashes');
 async function AddTasks(req,res,next){
     let description   = addSlashes(req.body.description);
     let due_date   = addSlashes(req.body.due_date);
+    console.log(req.body.relevant_mStone);
+    let relevant_mStone = (req.body.relevant_mStone === undefined) ? [] : req.body.relevant_mStone;
 
-
-    const Query = `INSERT INTO tasks (description,due_date) VALUES('${description}','${due_date}')`;
+    let Query = `INSERT INTO tasks (description,due_date) VALUES('${description}','${due_date}')`;
     // console.log(Query);
     const promisePool = db_pool.promise();
     let rows=[];
@@ -13,6 +14,18 @@ async function AddTasks(req,res,next){
         [rows] = await promisePool.query(Query);
         req.success=true;
         req.insertId=rows.insertId;
+
+        if(relevant_mStone.length > 0){
+            Query = "INSERT INTO tasks_milestones ";
+            Query += "(task_id,milestone_id,status) VALUES ";
+            for(let milestone_id of relevant_mStone) {
+                Query += `(${rows.insertId},${milestone_id},1),`;
+            }
+            Query=Query.slice(0,-1);
+            console.log(Query);
+            await promisePool.query(Query);
+        }
+
     } catch (err) {
         console.log(err);
         req.success=false;
