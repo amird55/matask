@@ -17,6 +17,10 @@ app.set('views', path.join(__dirname, "/views"));
 global.htmlspecialchars = require('htmlspecialchars');
 // const { addSlashes, stripSlashes } = require('slashes');
 
+const categ_R = require('./Routers/categ_R');
+app.use('/C/',categ_R);
+const worker_R = require('./Routers/worker_R');
+app.use('/W/',worker_R);
 const mStone_R = require('./Routers/mStone_R');
 app.use('/S/',mStone_R);
 const tasks_R = require('./Routers/tasks_R');
