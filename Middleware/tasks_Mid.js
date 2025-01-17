@@ -99,6 +99,33 @@ async function ChangeWorker(req,res,next){
 
     next();
 }
+async function ChangeOrder(req,res,next){
+    let idx    = parseInt(req.body.idx);
+    let old_ordr    = parseInt(req.body.old_ordr);
+    let new_ordr    = parseInt(req.body.new_ordr);
+
+    // פינוי מקום
+    let Query = `UPDATE tasks SET `;
+    Query += ` ordr      = ordr+1 `;
+    Query += ` WHERE ordr >= ${new_ordr} AND ordr <= ${old_ordr} `;
+
+    const promisePool = db_pool.promise();
+    let rows=[];
+    try {
+        [rows] = await promisePool.query(Query);
+        let Query = `UPDATE tasks SET `;
+        Query += ` ordr      = ${new_ordr} `;
+        Query += ` WHERE id = ${idx} `;
+        [rows] = await promisePool.query(Query);
+        req.success=true;
+    } catch (err) {
+        req.success=false;
+        console.log(err);
+    }
+
+
+    next();
+}
 async function ChangeMileStoneVal(req,res,next){
     let task_id       = (req.params.task_id      === undefined)  ?  -1 : parseInt(req.params.task_id      );
     let milestone_id  = (req.params.milestone_id === undefined)  ?  -1 : parseInt(req.params.milestone_id );
