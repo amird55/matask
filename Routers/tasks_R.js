@@ -18,6 +18,13 @@ router.put("/SetTaskStatus",[tasks_Mid.ChangeMileStoneVal], (req, res) => {
         return res.status(500).json({message: err});
     }
 });
+router.post('/ChangeOrder',[tasks_Mid.ChangeOrder], (req, res) => {
+    if(req.success){
+        res.status(200).json({msg:"ok"});
+    } else {
+        return res.status(500).json({message: err});
+    }
+});
 router.post('/',[tasks_Mid.AddTasks], (req, res) => {
     if(req.success){
         res.status(200).json({msg:"ok",Last_Id:req.insertId});

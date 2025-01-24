@@ -107,7 +107,11 @@ async function ChangeOrder(req,res,next){
     // פינוי מקום
     let Query = `UPDATE tasks SET `;
     Query += ` ordr      = ordr+1 `;
-    Query += ` WHERE ordr >= ${new_ordr} AND ordr <= ${old_ordr} `;
+    if(new_ordr < old_ordr) {
+        Query += ` WHERE ordr >= ${new_ordr} AND ordr <= ${old_ordr} `;
+    } else {
+        Query += ` WHERE ordr >= ${old_ordr} AND ordr <= ${new_ordr} `;
+    }
 
     const promisePool = db_pool.promise();
     let rows=[];
@@ -200,10 +204,11 @@ async function DeleteTasks(req,res,next){
 }
 
 module.exports = {
-    AddTasks: AddTasks,
-    ReadTasks:ReadTasks,
-    UpdateTasks:UpdateTasks,
-    DeleteTasks:DeleteTasks,
-    ChangeWorker:ChangeWorker,
-    ChangeMileStoneVal:ChangeMileStoneVal,
+    AddTasks            : AddTasks,
+    ReadTasks           : ReadTasks,
+    UpdateTasks         : UpdateTasks,
+    DeleteTasks         : DeleteTasks,
+    ChangeWorker        : ChangeWorker,
+    ChangeMileStoneVal  : ChangeMileStoneVal,
+    ChangeOrder         : ChangeOrder,
 }
