@@ -60,7 +60,7 @@ async function AddTasks(req,res,next){
     next();
 }
 async function ReadTasks(req,res,next){
-    const Query = `SELECT * FROM tasks `;
+    const Query = `SELECT *,DATE_FORMAT(due_date,"%d-%m-%Y") AS nice_due FROM tasks `;
     // console.log(Query);
     const promisePool = db_pool.promise();
     let rows=[];

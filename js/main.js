@@ -1,4 +1,5 @@
 var mStones=[];
+var all_tasks=[];
 async function GetMileStones(){
     let url="/S/";
     let response=await fetch(url);
@@ -15,7 +16,6 @@ function CreateTableHeader() {
     s+="    <th>תאריך יעד</th>";
     s+="    <th>אחוז התקדמות</th>";
     s+="    <th>קטגוריה</th>";
-    s+="    <th>תיאור</th>";
     for(let row of mStones) {
         s += "<th>";
         s += `${row.name}`;
@@ -24,5 +24,33 @@ function CreateTableHeader() {
     s+="</tr>";
     document.getElementById("mainHeader").innerHTML = s;
 }
+async function GetTasks(){
+    let url="/T/";
+    let response=await fetch(url);
+    let reply=await response.json();
+    all_tasks = reply.data;
+    console.log(all_tasks);
+    CreateTableBody();
+}
+function CreateTableBody() {
+    let s = "";
+    for(let row of all_tasks) {
+        let smart_due=(row.nice_due === "00-00-0000")?"":row.nice_due;
+        s += "<tr>";
+        s += `    <td>${row.description}</td>`;
+        s += `    <td>${row.worker_id}</td>`;
+        s += `    <td>${smart_due}</td>`;
+        s += `    <td>${row.progress_prcnt}</td>`;
+        s += `    <td>${row.categ_id}</td>`;
+        for (let row of mStones) {
+            s += "<td>";
+            // s += `${row.name}`;
+            s += "</td>";
+        }
+        s += "</tr>";
+    }
+    document.getElementById("mainTableData").innerHTML = s;
+}
 
 GetMileStones();
+GetTasks();
