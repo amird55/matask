@@ -24,10 +24,12 @@ async function ReadWorkers(req,res,next){
     // console.log(Query);
     const promisePool = db_pool.promise();
     let rows=[];
+    req.worker_by_id=[];
     try {
         [rows] = await promisePool.query(Query);
         for(let idx in rows){
             rows[idx].name= htmlspecialchars(stripSlashes(rows[idx].name));
+            req.worker_by_id[rows[idx].id]=rows[idx].name;
         }
         req.success=true;
         req.workers_data=rows;

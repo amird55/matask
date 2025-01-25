@@ -1,11 +1,19 @@
+var workers=[];
 var mStones=[];
 var all_tasks=[];
+async function GetWorkers(){
+    let url="/W/";
+    let response=await fetch(url);
+    let reply=await response.json();
+    workers = reply.worker_by_id;
+    console.log(workers);
+}
 async function GetMileStones(){
     let url="/S/";
     let response=await fetch(url);
     let reply=await response.json();
     mStones = reply.data;
-    console.log(mStones);
+    // console.log(mStones);
     CreateTableHeader();
 }
 function CreateTableHeader() {
@@ -29,7 +37,7 @@ async function GetTasks(){
     let response=await fetch(url);
     let reply=await response.json();
     all_tasks = reply.data;
-    console.log(all_tasks);
+    // console.log(all_tasks);
     CreateTableBody();
 }
 function CreateTableBody() {
@@ -38,7 +46,7 @@ function CreateTableBody() {
         let smart_due=(row.nice_due === "00-00-0000")?"":row.nice_due;
         s += "<tr>";
         s += `    <td>${row.description}</td>`;
-        s += `    <td>${row.worker_id}</td>`;
+        s += `    <td>${workers[row.worker_id]}</td>`;
         s += `    <td>${smart_due}</td>`;
         s += `    <td>${row.progress_prcnt}</td>`;
         s += `    <td>${row.categ_id}</td>`;
@@ -52,5 +60,6 @@ function CreateTableBody() {
     document.getElementById("mainTableData").innerHTML = s;
 }
 
+GetWorkers();
 GetMileStones();
 GetTasks();

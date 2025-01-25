@@ -13,7 +13,12 @@ router.post('/',[worker_Mid.AddWorkers], (req, res) => {
 });
 router.get('/',[worker_Mid.ReadWorkers], (req, res) => { //Read - קבלת רשימה
     if(req.success){
-        res.status(200).json({msg:"ok",data:req.workers_data});
+        res.status(200).json(
+            {
+                msg         :"ok",
+                data        :req.workers_data,
+                worker_by_id:req.worker_by_id,
+            });
     } else {
         return res.status(500).json({message: err});
     }
