@@ -216,7 +216,30 @@ async function DeleteTasks(req,res,next){
     }
     next();
 }
+async function GetAllMilestonsStatus(req,res,next){
+    let Query = 'SELECT *';
+    Query   += ' FROM tasks_milestones ';
+    Query += ` ORDER BY task_id `;
+    // console.log(Query);
+    const promisePool = db_pool.promise();
+    let rows=[];
+    req.mStoneStatusPerTask=[];
+    try {
+        [rows] = await promisePool.query(Query);
+        for(let row of rows){
+            let task_id=row.task_id;
+            let mStone_id=row.milestone_id ;
+            let status=row.status;
+            req.mStoneStatusPerTask[task_id][mStone_id]=status;
+        }
+        req.success=true;
+    } catch (err) {
+        req.success=false;
+        console.log(err);
+    }
+    next();
 
+}
 module.exports = {
     AddTasks            : AddTasks,
     ReadTasks           : ReadTasks,
