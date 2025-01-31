@@ -67,11 +67,22 @@ async function ReadTasks(req,res,next){
     // console.log(Query);
     const promisePool = db_pool.promise();
     let rows=[];
+    let Lvl=[];
     try {
         [rows] = await promisePool.query(Query);
         for(let idx in rows){
             rows[idx].description= htmlspecialchars(stripSlashes(rows[idx].description));
             // rows[idx].due_date= htmlspecialchars(stripSlashes(rows[idx].due_date));
+            if(Lvl[rows[idx].parent_id] === undefined){
+                Lvl[rows[idx].parent_id]=0;
+            }
+            if(rows[idx].parent_id == 0){
+                rows[idx].Lvl=0;
+            } else {
+                rows[idx].Lvl = Lvl[rows[idx].parent_id] + 1;
+            }
+            Lvl[rows[idx].id] = rows[idx].Lvl;
+            // console.log("parent=",rows[idx].parent_id,"id=",rows[idx].id,"Lvl=",Lvl);
         }
         req.success=true;
         req.tasks_data=rows;

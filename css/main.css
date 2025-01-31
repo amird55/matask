@@ -3,3 +3,9 @@ td,th{border:1px solid black;}
 .arsal td:first-child{
     font-weight: bold;
 }
+.lvl0{padding-right:  0px;}
+.lvl1{padding-right: 10px;}
+.lvl2{padding-right: 20px;}
+.lvl3{padding-right: 30px;}
+.lvl4{padding-right: 40px;}
+.lvl5{padding-right: 50px;}
