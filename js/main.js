@@ -1,6 +1,14 @@
+var categs=[];
 var workers=[];
 var mStones=[];
 var all_tasks=[];
+async function GetCateg(){
+    let url="/C/";
+    let response=await fetch(url);
+    let reply=await response.json();
+    categs = reply.categ_by_id;
+    console.log(categs);
+}
 async function GetWorkers(){
     let url="/W/";
     let response=await fetch(url);
@@ -49,7 +57,7 @@ function CreateTableBody() {
         s += `    <td>${workers[row.worker_id]}</td>`;
         s += `    <td>${smart_due}</td>`;
         s += `    <td>${row.progress_prcnt}</td>`;
-        s += `    <td>${row.categ_id}</td>`;
+        s += `    <td>${categs[row.categ_id]}</td>`;
         for (let row of mStones) {
             s += "<td>";
             // s += `${row.name}`;
@@ -59,7 +67,7 @@ function CreateTableBody() {
     }
     document.getElementById("mainTableData").innerHTML = s;
 }
-
+GetCateg();
 GetWorkers();
 GetMileStones();
 GetTasks();

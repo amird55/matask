@@ -24,10 +24,12 @@ async function ReadCategories(req,res,next){
     // console.log(Query);
     const promisePool = db_pool.promise();
     let rows=[];
+    req.categ_by_id=[];
     try {
         [rows] = await promisePool.query(Query);
         for(let idx in rows){
             rows[idx].name= htmlspecialchars(stripSlashes(rows[idx].name));
+            req.categ_by_id[rows[idx].id] = rows[idx].name;
         }
         req.success=true;
         req.categories_data=rows;
