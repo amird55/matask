@@ -6,15 +6,16 @@ async function GetCateg(){
     let url="/C/";
     let response=await fetch(url);
     let reply=await response.json();
+    console.log("reply=",reply);
     categs = reply.categ_by_id;
-    console.log(categs);
+    console.log("categs=",categs);
 }
 async function GetWorkers(){
     let url="/W/";
     let response=await fetch(url);
     let reply=await response.json();
     workers = reply.worker_by_id;
-    console.log(workers);
+    console.log("workers=",workers);
 }
 async function GetMileStones(){
     let url="/S/";

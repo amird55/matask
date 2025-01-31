@@ -13,7 +13,12 @@ router.post('/',[categ_Mid.AddCategories], (req, res) => {
 });
 router.get('/',[categ_Mid.ReadCategories], (req, res) => { //Read - קבלת רשימה
     if(req.success){
-        res.status(200).json({msg:"ok",data:req.categories_data});
+        res.status(200).json(
+            {
+                msg             :"ok",
+                categ_by_id     :req.categ_by_id,
+                data            :req.categories_data,
+            });
     } else {
         return res.status(500).json({message: err});
     }
