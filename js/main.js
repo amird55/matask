@@ -52,9 +52,16 @@ async function GetTasks(){
 function CreateTableBody() {
     let s = "";
     for(let row of all_tasks) {
+        let is_arsal = Number(row.is_arsal);
+        let indent="";
+        if(row.parent_id > 0){
+            indent += "&nbsp;&nbsp;&nbsp;&nbsp;";
+        }
         let smart_due=(row.nice_due === "00-00-0000")?"":row.nice_due;
-        s += "<tr>";
-        s += `    <td>${row.description}</td>`;
+        s += (is_arsal === 1)?
+            "<tr class='arsal'>" :
+            "<tr>";
+        s += `    <td>${indent}${row.description}</td>`;
         s += `    <td>${workers[row.worker_id]}</td>`;
         s += `    <td>${smart_due}</td>`;
         s += `    <td>${row.progress_prcnt}</td>`;

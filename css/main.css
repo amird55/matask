@@ -1,2 +1,5 @@
 body{background:lightgreen;direction: rtl}
 td,th{border:1px solid black;}
+.arsal td:first-child{
+    font-weight: bold;
+}
