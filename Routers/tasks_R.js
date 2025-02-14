@@ -40,6 +40,14 @@ router.get('/',[tasks_Mid.ReadTasks], (req, res) => { //Read - קבלת רשימ
     }
 
 });
+router.get('/TaskMStoneStatus',[tasks_Mid.GetAllMilestonsStatus], (req, res) => { //Read - קבלת רשימה
+    if(req.success){
+        res.status(200).json({msg:"ok",data:req.mStoneStatusPerTask});
+    } else {
+        return res.status(500).json({message: err});
+    }
+
+});
 router.put('/', [tasks_Mid.UpdateTasks], (req, res) => { //Update - עריכה
     if(req.success){
         res.status(200).json({msg:"ok"});

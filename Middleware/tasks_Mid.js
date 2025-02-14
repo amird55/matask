@@ -132,7 +132,7 @@ async function ChangeOrder(req,res,next){
     try {
         [rows] = await promisePool.query(Query);
         let Query = `UPDATE tasks SET `;
-        Query += ` ordr      = ${new_ordr} `;
+        Query += ` ordr      = ${new_ordr} `; //יש בעיה אם מזיזים את 2 אל 6 כי אל 6 משתנה מה שהיה 5
         Query += ` WHERE id = ${idx} `;
         [rows] = await promisePool.query(Query);
         req.success=true;
@@ -241,11 +241,12 @@ async function GetAllMilestonsStatus(req,res,next){
 
 }
 module.exports = {
-    AddTasks            : AddTasks,
-    ReadTasks           : ReadTasks,
-    UpdateTasks         : UpdateTasks,
-    DeleteTasks         : DeleteTasks,
-    ChangeWorker        : ChangeWorker,
-    ChangeMileStoneVal  : ChangeMileStoneVal,
-    ChangeOrder         : ChangeOrder,
+    AddTasks                : AddTasks,
+    ReadTasks               : ReadTasks,
+    UpdateTasks             : UpdateTasks,
+    DeleteTasks             : DeleteTasks,
+    ChangeWorker            : ChangeWorker,
+    ChangeMileStoneVal      : ChangeMileStoneVal,
+    ChangeOrder             : ChangeOrder,
+    GetAllMilestonsStatus   : GetAllMilestonsStatus,
 }
