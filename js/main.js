@@ -2,6 +2,14 @@ var categs=[];
 var workers=[];
 var mStones=[];
 var all_tasks=[];
+var mStoneStatus=[];
+async function GetStatus(){
+    let url="/T/TaskMStoneStatus";
+    let response=await fetch(url);
+    let reply=await response.json();
+    mStoneStatus = reply.data;
+    console.log("mStoneStatus=",mStoneStatus);
+}
 async function GetCateg(){
     let url="/C/";
     let response=await fetch(url);
@@ -62,16 +70,31 @@ function CreateTableBody() {
         s += `    <td>${smart_due}</td>`;
         s += `    <td>${row.progress_prcnt}</td>`;
         s += `    <td>${categs[row.categ_id]}</td>`;
-        for (let row of mStones) {
-            s += "<td>";
-            // s += `${row.name}`;
+        for (let stone of mStones) {
+            let sValue="";
+            let sCls="";
+            // console.log("row.id,stone.id = ",row.id,stone.id);
+            if((mStoneStatus[row.id] !== null)&&
+                (mStoneStatus[row.id][stone.id] !== null)){
+                switch (parseInt(mStoneStatus[row.id][stone.id])) {
+                    case 1: sValue="כן";    sCls="green";   break;
+                    case 2: sValue="לא";    sCls="red";     break;
+                    case 3: sValue="חלקי";  sCls="yellow";  break;
+                }
+            }
+            s += `<td class="${sCls}">`;
+            s += `${sValue}`;
             s += "</td>";
         }
         s += "</tr>";
     }
     document.getElementById("mainTableData").innerHTML = s;
 }
-GetCateg();
-GetWorkers();
-GetMileStones();
-GetTasks();
+async function BuildPage() {
+    await GetCateg();
+    await GetStatus();
+    await GetWorkers();
+    await GetMileStones();
+    await GetTasks();
+}
+BuildPage();

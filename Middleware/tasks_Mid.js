@@ -124,7 +124,8 @@ async function ChangeOrder(req,res,next){
     if(new_ordr < old_ordr) {
         Query += ` WHERE ordr >= ${new_ordr} AND ordr <= ${old_ordr} `;
     } else {
-        Query += ` WHERE ordr >= ${old_ordr} AND ordr <= ${new_ordr} `;
+        Query += ` WHERE ordr >=  ${new_ordr} `;
+        // Query += ` WHERE ordr >= ${old_ordr} AND ordr <= ${new_ordr} `;
     }
 
     const promisePool = db_pool.promise();
@@ -230,6 +231,9 @@ async function GetAllMilestonsStatus(req,res,next){
             let task_id=row.task_id;
             let mStone_id=row.milestone_id ;
             let status=row.status;
+            if(req.mStoneStatusPerTask[task_id] === undefined) {
+                req.mStoneStatusPerTask[task_id] = [];
+            }
             req.mStoneStatusPerTask[task_id][mStone_id]=status;
         }
         req.success=true;
