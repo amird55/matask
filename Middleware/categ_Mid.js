@@ -40,7 +40,7 @@ async function ReadCategories(req,res,next){
     next();
 }
 async function UpdateCategories(req,res,next){
-    let idx    = parseInt(req.body.idx);
+    let idx    = parseInt(req.body.categ_id);
     let name   = addSlashes(req.body.name);
 
     let Query = `UPDATE categories SET `;
