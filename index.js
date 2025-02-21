@@ -1,4 +1,4 @@
-// npm i express body-parser ejs htmlspecialchars mysql2  slashes@2.0.0
+// npm i express body-parser ejs htmlspecialchars mysql2  slashes@2.0.0  swagger-autogen
 const port = 7291;
 const express = require('express');
 const app = express();
@@ -19,6 +19,21 @@ app.use("/js",express.static(path.join(__dirname, "js")));
 
 global.htmlspecialchars = require('htmlspecialchars');
 // const { addSlashes, stripSlashes } = require('slashes');
+
+const swaggerAutogen = require('swagger-autogen')();
+
+const doc = {
+    info: {
+        title: 'My API',
+        description: 'תוכנת משימות מעולה'
+    },
+    host: `localhost:${port}`
+};
+
+const outputFile = './swagger-output.json';
+const routes = ['./index.js'];
+
+swaggerAutogen(outputFile, routes, doc);
 
 const Pages_R = require('./Routers/Pages_R');
 app.use('/',Pages_R);
